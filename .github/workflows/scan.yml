@@ -25,6 +25,11 @@ jobs:
           SHA: ${{ contains(github.event_name, 'pull_request') && github.event.pull_request.head.sha || github.sha }}
         run: echo "$SHA"
 
+      - name: Get SHA from PR element
+        env:
+          SHA: ${{ github.event.pull_request.head.sha }}
+        run: echo "$SHA"
+
       - name: Dump GitHub context
         env:
           GITHUB_CONTEXT: ${{ toJson(github) }}

@@ -16,10 +16,14 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Get Ref
-        run: echo "REF: ${{ contains(github.event_name, 'pull_request') && github.event.pull_request.head.ref || github.event.ref }}";
+        env:
+          REF: ${{ contains(github.event_name, 'pull_request') && github.event.pull_request.head.ref || github.event.ref }}"
+        run: echo "REF: $REF"
 
       - name: Get SHA
-        run: echo "SHA: ${{ contains(github.event_name, 'pull_request') && github.event.pull_request.head.sha || github.event.sha }}";
+        env:
+          SHA: ${{ contains(github.event_name, 'pull_request') && github.event.pull_request.head.sha || github.event.sha }}
+        run: echo "SHA: $SHA"
 
       - name: Dump GitHub context
         env:

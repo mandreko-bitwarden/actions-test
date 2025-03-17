@@ -15,9 +15,12 @@ jobs:
   test:
     runs-on: ubuntu-latest
     steps:
-#      - uses: actions/checkout@v4
-#      - run: echo "REF: ${{ contains(github.event_name, 'pull_request') && github.event.pull_request.head.ref || github.event.pull_request.base.ref }}";
-#      - run: echo "SHA: ${{ contains(github.event_name, 'pull_request') && github.event.pull_request.head.sha || github.event.pull_request.base.sha }}";
+      - name: Get Ref
+        run: echo "REF: ${{ contains(github.event_name, 'pull_request') && github.event.pull_request.head.ref || github.event.ref }}";
+
+      - name: Get SHA
+        run: echo "SHA: ${{ contains(github.event_name, 'pull_request') && github.event.pull_request.head.sha || github.event.sha }}";
+
       - name: Dump GitHub context
         env:
           GITHUB_CONTEXT: ${{ toJson(github) }}

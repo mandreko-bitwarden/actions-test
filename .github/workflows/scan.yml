@@ -17,7 +17,7 @@ jobs:
     steps:
       - name: Get Ref
         env:
-          REF: ${{ contains(github.event_name, 'pull_request') && format(refs/pull/{0}/merge', github.event.pull_request.number) || github.ref }}"
+          REF: ${{ contains(github.event_name, 'pull_request') && format('refs/pull/{0}/merge', github.event.pull_request.number) || github.ref }}"
         run: echo "$REF"
 
       - name: Get SHA

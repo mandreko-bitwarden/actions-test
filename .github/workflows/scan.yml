@@ -1,0 +1,21 @@
+name: Scan
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - "main"
+      - "rc"
+      - "hotfix-rc"
+  pull_request_target:
+    types: [opened, synchronize]
+
+jobs:
+
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: |
+        echo "REF: ${{ contains(github.event_name, 'pull_request') && github.event.pull_request.head.ref || github.event.pull_request.base.ref }}"
+        echo "SHA: ${{ contains(github.event_name, 'pull_request') && github.event.pull_request.head.sha || github.event.pull_request.base.sha}}"

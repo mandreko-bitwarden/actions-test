@@ -15,7 +15,9 @@ jobs:
   test:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+#      - uses: actions/checkout@v4
 #      - run: echo "REF: ${{ contains(github.event_name, 'pull_request') && github.event.pull_request.head.ref || github.event.pull_request.base.ref }}";
 #      - run: echo "SHA: ${{ contains(github.event_name, 'pull_request') && github.event.pull_request.head.sha || github.event.pull_request.base.sha }}";
+      - env:
+          GITHUB_CONTEXT: ${{ toJson(github) }}
       - run: echo "$GITHUB_CONTEXT"

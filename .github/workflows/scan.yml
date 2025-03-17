@@ -18,12 +18,12 @@ jobs:
       - name: Get Ref
         env:
           REF: ${{ contains(github.event_name, 'pull_request') && github.event.pull_request.head.ref || github.event.ref }}"
-        run: echo "REF: $REF"
+        run: echo "$REF"
 
       - name: Get SHA
         env:
           SHA: ${{ contains(github.event_name, 'pull_request') && github.event.pull_request.head.sha || github.event.sha }}
-        run: echo "SHA: $SHA"
+        run: echo "$SHA"
 
       - name: Dump GitHub context
         env:

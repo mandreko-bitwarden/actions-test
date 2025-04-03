@@ -12,23 +12,55 @@ on:
 
 jobs:
 
-  test:
+  # test:
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - name: Get Ref
+  #       env:
+  #         REF: ${{ contains(github.event_name, 'pull_request') && format('refs/pull/{0}/merge', github.event.pull_request.number) || github.ref }}"
+  #       run: echo "$REF"
+
+  #     - name: Get SHA
+  #       env:
+  #         SHA: ${{ contains(github.event_name, 'pull_request') && github.event.pull_request.head.sha || github.sha }}
+  #       run: echo "$SHA"
+
+  #     - name: Get SHA from PR element
+  #       env:
+  #         SHA: ${{ github.event.pull_request.head.sha }}
+  #       run: echo "$SHA"
+
+  #     - name: Dump GitHub context
+  #       env:
+  #         GITHUB_CONTEXT: ${{ toJson(github) }}
+  #       run: echo "$GITHUB_CONTEXT"
+
+  build:
+    name: Build
     runs-on: ubuntu-latest
     steps:
-      - name: Get Ref
-        env:
-          REF: ${{ contains(github.event_name, 'pull_request') && format('refs/pull/{0}/merge', github.event.pull_request.number) || github.ref }}"
-        run: echo "$REF"
 
-      - name: Get SHA
-        env:
-          SHA: ${{ contains(github.event_name, 'pull_request') && github.event.pull_request.head.sha || github.sha }}
-        run: echo "$SHA"
+      - name: Checkout
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          ref: "${{ github.event.pull_request.merge_commit_sha || github.sha }}"
 
-      - name: Get SHA from PR element
-        env:
-          SHA: ${{ github.event.pull_request.head.sha }}
-        run: echo "$SHA"
+      - name: Setup .NET
+        id: setup
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 9.0.x
+
+      - name: Run Build
+        run: |
+            & dotnet build src/Sample.Console/Sample.Console.csproj --configuration Release -p:AnalysisMode=all -p:AnalysisLevel=latest-all -p:'ErrorLog=\"${{ github.workspace }}/BuildOutput.sarif,version=2.1\"' -p:EnableNETAnalyzers=true -p:'PreferredUILang=\"en-US\"' --no-incremental
+        shell: pwsh
+
+      - name: Upload SARIF file
+        if: '!cancelled()'
+        uses: github/codeql-action/upload-sarif@9e8d0789d4a0fa9ceb6b1738f7e269594bdd67f0 # v3.28.9
+        with:
+          sarif_file: BuildOutput.sarif
 
       - name: Dump GitHub context
         env:

@@ -48,8 +48,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
         with:
-          ref: "${{ github.event.pull_request.merge_commit_sha || github.sha }}"
-
+          ref: ${{ contains(github.event_name, 'pull_request' && format('refs/pull/{0}/merge', github.event.pull_request.number) || github.ref) }}
       - name: Setup .NET
         id: setup
         uses: actions/setup-dotnet@v4

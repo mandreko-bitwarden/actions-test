@@ -1,5 +1,7 @@
 syntax: glob
 
+*.sarif
+
 ### VisualStudio ###
 
 # Tool Runtime Dir

@@ -10,10 +10,6 @@ on:
   pull_request_target:
     types: [opened, synchronize]
 
-env:
-  _PULL_REQUEST_TARGET_COMPAT_REF: ${{ contains(github.event_name, 'pull_request') && format('refs/pull/{0}/merge', github.event.pull_request.number) || github.ref }}
-  _PULL_REQUEST_TARGET_COMPAT_SHA: ${{ contains(github.event_name, 'pull_request') && github.event.pull_request.head.sha || github.sha }}
-
 jobs:
 
   build:
@@ -28,7 +24,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
         with:
-          ref: ${{ env._PULL_REQUEST_TARGET_COMPAT_SHA }} 
+          ref: ${{ github.event.pull_request.head.sha }}
 
       - name: Setup .NET
         id: setup
@@ -46,8 +42,8 @@ jobs:
         uses: github/codeql-action/upload-sarif@9e8d0789d4a0fa9ceb6b1738f7e269594bdd67f0 # v3.28.9
         with:
           sarif_file: BuildOutput.sarif
-          sha: ${{ env._PULL_REQUEST_TARGET_COMPAT_SHA }}
-          ref: ${{ env._PULL_REQUEST_TARGET_COMPAT_REF }}
+          sha: ${{ contains(github.event_name, 'pull_request') && github.event.pull_request.head.sha || github.sha }}
+          ref: ${{ contains(github.event_name, 'pull_request') && format('refs/pull/{0}/head', github.event.pull_request.number) || github.ref }}
 
 
       - name: Dump GitHub context

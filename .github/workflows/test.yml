@@ -1,5 +1,5 @@
 # Publish GitHub workflow artifacts tutorial example
-name: Publish GitHub Actions Artifacts Example
+name: Github Env Output test
 on:
   workflow_dispatch:
   push:
@@ -8,13 +8,13 @@ jobs:
   github-actions-environment-variables-ubuntu:
     runs-on: ubuntu-latest
     steps:
-      - name: List of the GitHub Actions environment variables on Windows
+      - name: Ubuntu GitHub Actions environment variables List
         run: env
 
   github-actions-environment-variables-windows:
     runs-on: windows-latest
     steps:
-      - name: Ubuntu GitHub Actions environment variables List
+      - name: Windows GitHub Actions environment variables List
         run: env
 
   github-actions-environment-variables-macos:

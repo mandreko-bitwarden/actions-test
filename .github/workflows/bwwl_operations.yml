@@ -26,7 +26,6 @@ jobs:
       pull-requests: write
     env:
       _ACTION: ${{ inputs.action }}
-      _REASON: ${{ inputs.reason }}
     steps:
       - name: Check for action input
         if: ${{ inputs.operation == 'add' && !env._ACTION }}
@@ -41,7 +40,7 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
           TITLE: "Update/Add bwwl approved actions${{ inputs.operation == 'add' && env._ACTION != '' && format(' for {0}', env._ACTION) || '' }}"
-          REASON: "${{ inputs.operation == 'add' && format('## Business Reason\n{0}\n', env._REASON) || '' }}"
+          REASON: "${{ inputs.operation == 'add' && format('## Business Reason\n{0}\n', inputs.REASON) || '' }}"
         run: |
           echo gh pr create --title "$TITLE" \
             --base "main" \
@@ -58,4 +57,4 @@ jobs:
               
               $REASON
               ## Description
-              - This PR updates the approved actions for the Bitwarden Workflow Linter." >> $GITHUB_OUTPUT
+              - This PR updates the approved actions for the Bitwarden Workflow Linter."

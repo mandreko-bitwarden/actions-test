@@ -27,6 +27,7 @@ jobs:
     env:
       _ACTION: ${{ inputs.action }}
       _REASON: ${{ inputs.reason }}
+      GH_TOKEN: ${{ github.token }}
     steps:
       - name: Check for action input
         if: ${{ inputs.operation == 'add' && !env._ACTION }}

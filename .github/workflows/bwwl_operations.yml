@@ -27,7 +27,6 @@ jobs:
     env:
       _ACTION: ${{ inputs.action }}
       _REASON: ${{ inputs.reason }}
-      GH_TOKEN: ${{ github.token }}
     steps:
       - name: Check for action input
         if: ${{ inputs.operation == 'add' && !env._ACTION }}
@@ -40,7 +39,7 @@ jobs:
       - name: Create PR
         id: create-pr
         env:
-          GH_TOKEN: ${{ steps.app-token.outputs.token }}
+          GH_TOKEN: ${{ github.token }}
           TITLE: "Update/Add bwwl approved actions${{ inputs.operation == 'add' && env._ACTION != '' && format(' for {0}', env._ACTION) || '' }}"
           REASON: "${{ inputs.operation == 'add' && format('## Business Reason\n{0}\n', env._REASON) || '' }}"
         run: |

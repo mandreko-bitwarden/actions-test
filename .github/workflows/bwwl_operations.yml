@@ -27,6 +27,10 @@ jobs:
     env:
       _ACTION: ${{ inputs.action }}
     steps:
+      - name: Get actor
+        id: get-actor
+        run: echo "Actor: ${{ github.actor }}"
+
       - name: Check for action input
         if: ${{ inputs.operation == 'add' && !env._ACTION }}
         run: echo "Action input is required for operation 'add'" && exit 1

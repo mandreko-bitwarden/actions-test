@@ -40,7 +40,7 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
           TITLE: "Update/Add bwwl approved actions${{ inputs.operation == 'add' && env._ACTION != '' && format(' for {0}', env._ACTION) || '' }}"
-          REASON: "${{ inputs.operation == 'add' && format('## Business Reason\n    {0}\n', inputs.REASON) || '' }}"
+          REASON: "${{ inputs.operation == 'add' && format('\n## Business Reason\n    {0}\n', inputs.REASON) || '' }}"
         run: |
           echo gh pr create --title "$TITLE" \
             --base "main" \
@@ -54,7 +54,6 @@ jobs:
               - [X] Tech debt (refactoring, code cleanup, dependency upgrades, etc)
               - [ ] Build/deploy pipeline (DevOps)
               - [ ] Other
-              
               $REASON
               ## Description
               - This PR updates the approved actions for the Bitwarden Workflow Linter."

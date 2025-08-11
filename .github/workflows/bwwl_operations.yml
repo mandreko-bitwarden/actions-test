@@ -43,7 +43,7 @@ jobs:
           TITLE: "Update/Add bwwl approved actions${{ inputs.operation == 'add' && env._ACTION != '' && format(' for {0}', env._ACTION) || '' }}"
           REASON: "${{ inputs.operation == 'add' && format('## Business Reason\n{0}\n', env._REASON) || '' }}"
         run: |
-          PR_URL=$(echo gh pr create --title "$TITLE" \
+          echo gh pr create --title "$TITLE" \
             --base "main" \
             --head "${{ env.BRANCH_NAME }}" \
             --label "version:patch" \
@@ -58,5 +58,4 @@ jobs:
               
               $REASON
               ## Description
-              - This PR updates the approved actions for the Bitwarden Workflow Linter.")
-          echo "pr_number=${PR_URL##*/}" >> $GITHUB_OUTPUT
+              - This PR updates the approved actions for the Bitwarden Workflow Linter." >> $GITHUB_OUTPUT

@@ -1,24 +1,17 @@
 # Publish GitHub workflow artifacts tutorial example
-name: Github Env Output test
+name: Github toJSON Test
 on:
   workflow_dispatch:
   push:
-    branches: [ main ]
+
+permissions: {}
+
 jobs:
   github-actions-environment-variables-ubuntu:
     runs-on: ubuntu-latest
     steps:
-      - name: Ubuntu GitHub Actions environment variables List
-        run: env
-
-  github-actions-environment-variables-windows:
-    runs-on: windows-latest
-    steps:
-      - name: Windows GitHub Actions environment variables List
-        run: env
-
-  github-actions-environment-variables-macos:
-    runs-on: macos-latest
-    steps:
-      - name: MacOs List of GitHub Actions environment variables
-        run: env
+      - name: Check toJSON strings
+        env:
+          TEST: ${{ github.event.workflow_run.pull_requests[0].head.ref }}
+          TEST_JSON: ${{ toJSON(github.event.workflow_run.pull_requests[0].head.ref) }}
+        run: echo "$TEST\n$TEST_JSON"

@@ -1,0 +1,11 @@
+name: PR Trigger
+on:
+  pull_request:
+
+permissions: {}
+
+jobs:
+  placeholder:
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "Triggered by PR on branch ${{ github.head_ref }}"

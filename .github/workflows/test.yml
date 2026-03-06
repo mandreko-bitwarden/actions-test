@@ -1,8 +1,9 @@
 # Publish GitHub workflow artifacts tutorial example
 name: Github toJSON Test
 on:
-  workflow_dispatch:
-  push:
+  workflow_run:
+    workflows: ["PR Trigger"]
+    types: [completed]
 
 permissions: {}
 

